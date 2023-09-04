@@ -1,105 +1,118 @@
 package com.example.lab5
+
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Divider
-import androidx.compose.material3.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.example.lab5.ui.theme.Lab5Theme
 
-class vista2 : ComponentActivity() {
+class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            EventList()
-        }
-    }
-}
-
-@Composable
-fun EventList() {
-    val events = remember {
-        listOf(
-            Event("Evento 1", "Descripción del Evento 1"),
-            Event("Evento 2", "Descripción del Evento 2"),
-            Event("Evento 3", "Descripción del Evento 3"),
-            Event("Evento 4", "Descripción del Evento 4")
-        )
-    }
-
-    var searchText by remember { mutableStateOf("") }
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        BasicTextField(
-            value = searchText,
-            onValueChange = { newText ->
-                searchText = newText
-            },
-            keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Search
-            ),
-            keyboardActions = KeyboardActions(
-                onSearch = {
-                    // Puedes realizar la búsqueda aquí si es necesario
+            Lab5Theme {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    contenido()
                 }
-            ),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp)
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        LazyColumn {
-            items(events) { event ->
-                EventItem(event)
-                Divider()
             }
         }
     }
 }
 
+data class Evento(val nombre: String, val descripcion: String)
+
+
+val eventos = listOf(
+    Evento("Bad bunny", "Reguetón"),
+    Evento("Los tigres del norte", "Banda"),
+    Evento("Shakira", "Pop"),
+    Evento("Romeo Santos", "Bachata"),
+    Evento("Adele", "Pop"),
+    Evento("Taylor Swift", "Pop"),
+    Evento("Ed Sheeran", "Pop"),
+    Evento("Beyoncé", "R&B"),
+    Evento("Drake", "Hip-Hop"),
+    Evento("Billie Eilish", "Pop"),
+    Evento("Coldplay", "Pop/Rock"),
+    Evento("Bruno Mars", "Pop"),
+    Evento("Ariana Grande", "Pop"),
+    Evento("Justin Bieber", "Pop"),
+    Evento("Katy Perry", "Pop"),
+    Evento("Rihanna", "Pop/R&B"),
+    Evento("The Weeknd", "R&B")
+)
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EventItem(event: Event) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp)
-    ) {
-        Text(
-            text = event.title,
-            modifier = Modifier.padding(bottom = 4.dp)
-        )
-        Text(text = event.description)
+fun contenido() {
+    LazyColumn{
+        items(eventos){
+                item ->ListItem(item)
+        }
     }
 }
 
-data class Event(val title: String, val description: String)
+
+@Composable
+fun ListItem(Evento: Evento, modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier
+            .padding(8.dp)
+            .background(Color.LightGray)
+            .fillMaxWidth()
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = Evento.nombre,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black
+            )
+
+            // Agregar el icono de tres puntos
+            Icon(
+                imageVector = Icons.Default.MoreVert,
+                contentDescription = null, // Puedes proporcionar una descripción
+                tint = Color.Black
+            )
+        }
+
+        Spacer(modifier = modifier.height(8.dp))
+
+        LazyRow {
+            items(1) {
+                    item ->
+                Text(text = Evento.descripcion, color = Color.Black)
+            }
+        }
+    }
+}
+
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewEventList() {
-    EventList()
+fun DefaultPreview() {
+    Lab5Theme {
+        contenido()
+    }
 }
